@@ -32,6 +32,12 @@ public class GlobalExceptionHandler {
 				userIdNotFoundException.getMessage(),LocalDateTime.now(),HttpStatus.NOT_FOUND),HttpStatus.NOT_FOUND);
 	}
 	
+	@SuppressWarnings("unchecked")
+	@ExceptionHandler({EmailIdNotFoundException.class})
+	public ResponseEntity<ExceptionResponse> EmailIdNotFoundException(final EmailIdNotFoundException emailIdNotFoundException){
+		return (ResponseEntity<ExceptionResponse>) new ResponseEntity((Object) new ExceptionResponse(
+				emailIdNotFoundException.getMessage(),LocalDateTime.now(),HttpStatus.NOT_FOUND),HttpStatus.NOT_FOUND);
+	}
 	
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)

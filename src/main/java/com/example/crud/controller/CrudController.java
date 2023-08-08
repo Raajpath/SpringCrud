@@ -3,15 +3,19 @@ package com.example.crud.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.crud.exception.EmailIdNotFoundException;
 import com.example.crud.exception.UserIdNotFoundException;
 import com.example.crud.exception.UserNameNotFoundException;
+import com.example.crud.model.Address;
 import com.example.crud.model.User;
 import com.example.crud.service.UserService;
 
@@ -42,7 +46,6 @@ public class CrudController {
 			MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE})
 	public User findUserByName(@PathVariable String name) throws UserNameNotFoundException{
-		
 		return this.userService.findByName(name.trim());
 	
 	}
@@ -55,9 +58,20 @@ public class CrudController {
 		
 	}
 	
-	
-	
-	
-	
+	@PutMapping(path="/updateuseraddressbyemail/{emailId}",produces= {
+			MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_VALUE})
+	public String updateAddressbyEmail(@RequestBody Address address,@PathVariable("emailId") String email) throws EmailIdNotFoundException{
+		return userService.updateAddressbyEmailId(address,email);
+	}
 
+	
+	
+	@DeleteMapping(path="/deleteUserbyUserId/{id}",produces= {
+			MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_VALUE})
+	public String deleteUserbyId(@PathVariable("id") int userId) throws UserIdNotFoundException{
+		return userService.deleteUserbyUserId(userId);
+	}
+	
 }

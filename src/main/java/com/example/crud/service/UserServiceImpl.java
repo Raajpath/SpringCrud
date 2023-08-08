@@ -2,18 +2,20 @@ package com.example.crud.service;
 
 
 
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import com.example.crud.exception.EmailIdNotFoundException;
 import com.example.crud.exception.UserIdNotFoundException;
 import com.example.crud.exception.UserNameNotFoundException;
+import com.example.crud.model.Address;
 import com.example.crud.model.User;
 import com.example.crud.repository.UserRepository;
 
-import jakarta.validation.ConstraintViolationException;
+import jakarta.transaction.Transactional;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -49,6 +51,35 @@ public class UserServiceImpl implements UserService {
 		} catch(Exception userNameNotFound) {
 			throw new UserNameNotFoundException("User with User Id "+userId+" doesn't exists !!");
 		}
+	}
+
+
+	@Transactional
+	@Override
+	public String updateAddressbyEmailId(Address address, String email) throws EmailIdNotFoundException  {
+		// TODO Auto-generated method stub
+		
+		try {
+			int useraddrid=this.userRepository.findaddressidbyemail(email);
+			this.userRepository.updateaddress(useraddrid,address.getStreetNumber(),address.getAddressLine1(),address.getAddressLine2(),address.getLocality(),address.getCity(),address.getDistrict(),address.getPinCode(),address.getState(),address.getCountry());
+			return "Addresss Updated Successfully";
+		}catch(Exception emailIdNotFound) {
+			throw new EmailIdNotFoundException("User with Email: "+ email +" doesn't exists ");
+		}
+		
+		
+	}
+
+
+	@Transactional
+	@Override
+	public String deleteUserbyUserId(int userId) throws UserIdNotFoundException {
+		if(this.userRepository.existsById(userId)) {
+			this.userRepository.deleteById(userId);
+			return "User Deleted Successfully";
+		}
+		throw new UserIdNotFoundException("User with User Id "+userId+" doesn't exists !!");
+			
 	}
 	
 	
